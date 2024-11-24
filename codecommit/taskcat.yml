@@ -1,0 +1,9 @@
+project:
+  name: nam-huy
+  regions:
+    - us-east-1
+  s3_bucket: stt08-bucket # Ensure this bucket exists in your AWS account
+tests:
+  default:
+    template: ./main.yaml # Main CloudFormation template
+    s3_bucket: stt08-bucket # The S3 bucket where the template is located
