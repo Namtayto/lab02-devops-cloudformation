@@ -1,0 +1,18 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.x
+    commands:
+      - pip install cfn-lint taskcat
+  build:
+    commands:
+      # Quét tất cả các file *.yaml trong thư mục hiện tại
+      - echo "Running cfn-lint on specific templates"
+      - cfn-lint main.yaml vpc.yaml subnets.yaml gateway.yaml route_tables.yaml security_groups.yaml ec2.yaml
+      # Chạy Taskcat để kiểm tra tính đúng đắn của các stack CloudFormation
+      - taskcat test run
+artifacts:
+  files:
+    - "**/*"
