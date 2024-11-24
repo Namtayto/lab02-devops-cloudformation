@@ -1,0 +1,47 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: CloudFormation template to create Internet Gateway and NAT Gateway
+
+Parameters:
+  VPCId:
+    Type: String
+    Description: VPC Id
+  PublicSubnetId:
+    Type: String
+    Description: Public Subnet Id
+
+Resources:
+  InternetGateway:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: InternetGateway
+
+  AttachGateway:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref VPCId
+      InternetGatewayId: !Ref InternetGateway
+
+  ElasticIP:
+    Type: AWS::EC2::EIP
+    Properties:
+      Domain: vpc
+
+  NATGateway:
+    Type: AWS::EC2::NatGateway
+    Properties:
+      SubnetId: !Ref PublicSubnetId
+      AllocationId: !GetAtt ElasticIP.AllocationId
+      Tags:
+        - Key: Name
+          Value: NATGateway
+
+Outputs:
+  InternetGatewayId:
+    Description: Internet Gateway Id
+    Value: !Ref InternetGateway
+
+  NATGatewayId:
+    Description: NAT Gateway Id
+    Value: !Ref NATGateway

@@ -1,0 +1,38 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: CloudFormation template to create Public and Private subnets.
+
+Parameters:
+  VPCId:
+    Type: String
+    Description: VPC Id
+
+Resources:
+  PublicSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPCId
+      CidrBlock: 10.0.1.0/24
+      MapPublicIpOnLaunch: true
+      AvailabilityZone: !Select [0, !GetAZs ""] # Lấy AZ đầu tiên
+      Tags:
+        - Key: Name
+          Value: public_subnet
+
+  PrivateSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPCId
+      CidrBlock: 10.0.2.0/24
+      AvailabilityZone: !Select [1, !GetAZs ""] # Lấy AZ thứ hai
+      Tags:
+        - Key: Name
+          Value: private_subnet
+
+Outputs:
+  PublicSubnetId:
+    Description: Public Subnet Id
+    Value: !Ref PublicSubnet
+
+  PrivateSubnetId:
+    Description: Private Subnet Id
+    Value: !Ref PrivateSubnet
